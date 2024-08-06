@@ -12,7 +12,7 @@ public class MediaItem {
     private int id;
     private String name;
     private String finishDate;
-    private int rating;
+    private double rating;
     private String review;
 
     public int getId() {
@@ -39,11 +39,11 @@ public class MediaItem {
         this.finishDate = finishDate;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -52,6 +52,9 @@ public class MediaItem {
     }
 
     public void setReview(String review) {
+        if(review.isEmpty()){
+            review = "None";
+        }
         this.review = review;
     }
     public MediaItem() {
