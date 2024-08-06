@@ -6,12 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Student {
+public class MediaItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String address;
+    private String finishDate;
+    private int rating;
+    private String review;
 
     public int getId() {
         return id;
@@ -29,14 +31,29 @@ public class Student {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getFinishDate() {
+        return finishDate;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setFinishDate(String finishDate) {
+        this.finishDate = finishDate;
     }
 
-    public Student() {
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+    public MediaItem() {
     }
 }
