@@ -15,7 +15,8 @@ public class MediaController {
     @Autowired
     private MediaService mediaService;
 
-    private String filter = "";
+    private String nameFilter = "";
+    private String ratingFilter = "";
 
     @PostMapping("/add")
     public String add(@RequestBody MediaItem media){
@@ -25,15 +26,26 @@ public class MediaController {
 
     @PostMapping("/setFilter")
     public void setFilter(@RequestBody FilterRequest filterRequest) {
-        this.filter = filterRequest.getFilter(); // Get the filter from the request object
+        this.nameFilter = filterRequest.getNameFilter(); // Get the filter from the request object
+        this.ratingFilter = filterRequest.getRatingFilter();
     }
 
     @GetMapping("/getAll")
     public List<MediaItem> getAllMedia() {
         List<MediaItem> mediaList = mediaService.getAllMedia();//get media list from database
-        System.out.println(filter);
-        //remove all media without the filter in the name
-        mediaList.removeIf(m -> !m.getName().toLowerCase().contains(filter.toLowerCase()));
+        mediaList.removeIf(m -> {
+            boolean ratingCheck = false;
+            if(!ratingFilter.isEmpty()){//there is a rating so filter the rating
+                if(ratingFilter.length() == 1){//whole number so take anything thats rounds to this
+                    ratingCheck = !((int)m.getRating() == Integer.parseInt(ratingFilter));
+                }else{//double so take exact value
+                    ratingCheck = !(m.getRating() == Double.parseDouble(ratingFilter));
+                }
+            }
+
+            //always check name filter, if it is empty it will be true anyways
+            return ratingCheck || !m.getName().toLowerCase().contains(nameFilter.toLowerCase());
+        });
         return mediaList;
     }
 }

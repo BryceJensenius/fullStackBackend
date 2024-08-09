@@ -1,13 +1,14 @@
 package com.BryceJensenius.MediaOrganizer.model;
 
 public class FilterRequest {
-    private String filter;
+    private String nameFilter = "";
+    private String ratingFilter = "";
 
-    public String getFilter() {
-        return filter;
+    public String getNameFilter() {
+        return nameFilter;
     }
 
-    public void setFilter(String filter) {
-        this.filter = filter;
+    public String getRatingFilter() {
+        return ratingFilter;
     }
 }
