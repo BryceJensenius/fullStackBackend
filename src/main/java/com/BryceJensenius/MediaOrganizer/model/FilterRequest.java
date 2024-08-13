@@ -9,8 +9,8 @@ import com.BryceJensenius.MediaOrganizer.comparators.MediaComparators;
 public class FilterRequest {
     private String nameFilter = "";
     private String ratingFilter = "";
-    private String sortType = "";
-    private String sortOrder = "";
+    private String sortType = "name";
+    private String sortOrder = "desc";
 
     public String getNameFilter() {
         return nameFilter;
@@ -52,6 +52,9 @@ public class FilterRequest {
         Comparator<MediaItem> comparator;
 
         switch (sortType) {
+            case "id":
+                comparator = MediaComparators.byId();
+                break;
             case "name":
                 comparator = MediaComparators.byName();
                 break;

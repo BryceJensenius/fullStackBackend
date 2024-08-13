@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MediaController {
     @Autowired
     private MediaService mediaService;
-    private FilterRequest filterRequest;
+    private FilterRequest filterRequest = new FilterRequest();
     private int editId = -1;//id of the element that is being edited, -1 is no element
 
     @PostMapping("/add")
