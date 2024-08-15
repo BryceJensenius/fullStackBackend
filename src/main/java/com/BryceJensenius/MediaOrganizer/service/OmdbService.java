@@ -15,7 +15,7 @@ public class OmdbService {
      */
     public JsonObject getMovieDetails(String title) {
         String url = OMDB_URL + "t=" + title.replace(" ", "+");
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate(); //rest template requests can throw errors, add handling later
         String jsonResponse = restTemplate.getForObject(url, String.class);
 
         JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
