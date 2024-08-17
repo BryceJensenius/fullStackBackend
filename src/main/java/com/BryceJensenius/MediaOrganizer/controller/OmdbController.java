@@ -14,12 +14,9 @@ public class OmdbController {
 
     @Autowired
     private OmdbService omdbService;
-    private int numCalls = 0;
 
     @GetMapping("/movie/{title}")
     public String[] getMovie(@PathVariable String title) {
-        String[] guess = omdbService.getMovieDetails(title);
-        System.out.println(Arrays.toString(guess));
-        return guess;
+        return omdbService.getMovieDetails(title);
     }
 }
