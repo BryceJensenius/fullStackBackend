@@ -18,7 +18,7 @@ public class OmdbService {
     /*
         Guess a Movie's Title from partially complete title
      */
-    public String[] getMovieDetails(String title) {
+    public String[] getGuessNames(String title) {
         String url = OMDB_URL + "s=" + title.replace(" ", "+");
         RestTemplate restTemplate = new RestTemplate(); //rest template requests can throw errors, add handling later
         try{
@@ -44,6 +44,17 @@ public class OmdbService {
             return new String[]{"Null Error Occurred"};
         }catch(Exception e){
             return new String[]{"API Call Failed"};
+        }
+    }
+
+    public JsonObject getMovieDetails(String title){
+        String url = OMDB_URL + "t=" + title.replace(" ", "+");//search for one with this title
+        RestTemplate restTemplate = new RestTemplate(); //rest template requests can throw errors, add handling later
+        try{
+            String jsonResponse = restTemplate.getForObject(url, String.class);
+            return JsonParser.parseString(jsonResponse).getAsJsonObject();
+        }catch(Exception e){
+            return null;
         }
     }
 }

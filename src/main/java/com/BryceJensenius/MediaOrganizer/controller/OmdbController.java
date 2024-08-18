@@ -15,9 +15,21 @@ public class OmdbController {
     @Autowired
     private OmdbService omdbService;
 
-    @GetMapping("/movie/{title}")
+    /*
+        get the list of titles most similar to the inputted one
+        shortened to 4 guesses
+     */
+    @GetMapping("/getTitles/{title}")
     public String[] getMovie(@PathVariable String title) {
-        String[] guessList = omdbService.getMovieDetails(title);
+        String[] guessList = omdbService.getGuessNames(title);
         return Arrays.copyOfRange(guessList, 0, Math.min(4, guessList.length));//shorten the list to 4 elements
+    }
+
+    /*
+        get the specific API details on a movie
+     */
+    @GetMapping("/getFullInfo/{title}")
+    public JsonObject getFullInfo(@PathVariable String title) {
+        return omdbService.getMovieDetails(title);
     }
 }
