@@ -17,6 +17,7 @@ public class OmdbController {
 
     @GetMapping("/movie/{title}")
     public String[] getMovie(@PathVariable String title) {
-        return omdbService.getMovieDetails(title);
+        String[] guessList = omdbService.getMovieDetails(title);
+        return Arrays.copyOfRange(guessList, 0, Math.min(4, guessList.length));//shorten the list to 4 elements
     }
 }
