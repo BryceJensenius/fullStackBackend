@@ -1,15 +1,11 @@
 package com.BryceJensenius.MediaOrganizer.controller;
 
-import com.BryceJensenius.MediaOrganizer.model.MovieDetails;
 import com.BryceJensenius.MediaOrganizer.service.OmdbService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
