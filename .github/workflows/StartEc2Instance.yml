@@ -1,0 +1,28 @@
+name: Start or Stop Ec2 Instance
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform (start or stop)'
+        required: true
+        default: 'start'
+        type: choice
+        options:
+          - start
+          - stop
+jobs:
+  ec2-instance-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start or Stop EC2 Instance
+        uses: aws-actions/aws-cli-action@v1
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: us-west-2
+          command: |
+            if [ "${{ github.event.inputs.action }}" = "start" ]; then
+              aws ec2 start-instances --instance-ids ${{ secrets.AWS_INSTANCE_ID }}
+            else
+              aws ec2 stop-instances --instance-ids ${{ secrets.AWS_INSTANCE_ID }}
+            fi
