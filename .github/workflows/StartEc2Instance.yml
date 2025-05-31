@@ -24,8 +24,10 @@ jobs:
         id: ec2_action
         run: |
           if [ "${{ github.event.inputs.action }}" = "start" ]; then
+            echo "Starting EC2 instance..."
             aws ec2 start-instances --instance-ids ${{ secrets.AWS_INSTANCE_ID }}
             aws ec2 wait instance-running --instance-ids ${{ secrets.AWS_INSTANCE_ID }}
+            echo "EC2 instance started successfully."
 
             PUBLIC_IP=$(aws ec2 describe-instances \
               --instance-ids ${{ secrets.AWS_INSTANCE_ID }} \
@@ -35,9 +37,13 @@ jobs:
             echo "Public IP is: $PUBLIC_IP"
             echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
           else
+            echo "Stopping EC2 instance..."
             aws ec2 stop-instances --instance-ids ${{ secrets.AWS_INSTANCE_ID }}
           fi
       - name: Update Namecheap DNS If Starting
         if: ${{ github.event.inputs.action == 'start' }}
         run: |
-          curl "https://dynamicdns.park-your-domain.com/update?host=@&domain=${{ secrets.NAMECHEAP_DOMAIN }}&password=${{ secrets.NAMECHEAP_DDNS_PASSWORD }}&ip=${{ env.PUBLIC_IP }}"
+          echo "Updating Namecheap DNS with new public IP..."
+          URL="https://dynamicdns.park-your-domain.com/update?host=@&domain=${{ secrets.NAMECHEAP_DOMAIN }}&password=${{ secrets.NAMECHEAP_DDNS_PASSWORD }}&ip=${{ env.PUBLIC_IP }}"
+          echo "Requesting URL: $URL"
+          curl $URL
