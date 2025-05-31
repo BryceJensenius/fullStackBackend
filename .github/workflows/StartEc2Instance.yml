@@ -20,7 +20,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
-      - name: "{{ github.event.inputs.action }} EC2 Instance"
+      - name: "${{ github.event.inputs.action }} EC2 Instance"
         id: ec2_action
         run: |
           if [ "${{ github.event.inputs.action }}" = "start" ]; then
