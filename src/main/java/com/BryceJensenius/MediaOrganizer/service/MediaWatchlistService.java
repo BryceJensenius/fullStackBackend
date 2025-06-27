@@ -27,4 +27,8 @@ public class MediaWatchlistService {
     public MediaWatchItem getMediaById(int id) {
         return mediaWatchlistRepository.findById(id);
     }
+
+    public void delete(int id){
+        mediaWatchlistRepository.deleteById(id);
+    }
 }

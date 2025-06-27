@@ -16,9 +16,15 @@ public class MediaWatchlistController {
     private MediaWatchlistService mediaWatchlistService;
 
     @PostMapping("/add")
-    public String add(@RequestBody MediaWatchItem mediaName){
-        mediaWatchlistService.add(mediaName);
+    public String add(@RequestBody MediaWatchItem mediaWatchItem){
+        mediaWatchlistService.add(mediaWatchItem);
         return "New Media Watch List Item Was Added";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable int id){
+        mediaWatchlistService.delete(id);
+        return "Media Watch List item deleted";
     }
 
     @GetMapping("/getById/{id}")

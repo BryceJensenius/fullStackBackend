@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class OmdbService {
 
-    private final String API_KEY = "****";
+    private final String API_KEY = "**";
     private final String OMDB_URL = "http://www.omdbapi.com/?apikey=" + API_KEY + "&";
 
     /*

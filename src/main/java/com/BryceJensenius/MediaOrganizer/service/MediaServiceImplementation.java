@@ -28,4 +28,9 @@ public class MediaServiceImplementation implements MediaService {
     public Optional<MediaItem> getMediaById(int id) {
         return mediaRepository.findById(id);
     }
+
+    @Override
+    public void deleteById(int id){
+        mediaRepository.deleteById(id);
+    }
 }

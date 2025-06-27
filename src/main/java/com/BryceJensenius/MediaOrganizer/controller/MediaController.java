@@ -25,6 +25,12 @@ public class MediaController {
         return "New Media Item Was Added";
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable int id){
+        mediaService.deleteById(id);
+        return "Media Item Was Deleted";
+    }
+
     @PostMapping("/setFilter")
     public void setFilter(@RequestBody FilterRequest filterRequest) {
         this.filterRequest = filterRequest; // Get the filter from the request object
