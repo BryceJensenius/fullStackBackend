@@ -1,9 +1,6 @@
 package com.BryceJensenius.MediaOrganizer.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class MediaItem implements Media{
@@ -13,6 +10,8 @@ public class MediaItem implements Media{
     private String name;
     private String finishDate;
     private double rating;
+    @Lob
+    @Column
     private String review;
 
     public int getId() {
