@@ -10,8 +10,7 @@ public class MediaItem implements Media{
     private String name;
     private String finishDate;
     private double rating;
-    @Lob
-    @Column
+    @Column(length = 5000)
     private String review;
 
     public int getId() {
