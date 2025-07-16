@@ -2,6 +2,8 @@ package com.BryceJensenius.MediaOrganizer.comparators;
 
 import com.BryceJensenius.MediaOrganizer.model.MediaItem;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 public class MediaComparators {
@@ -17,7 +19,8 @@ public class MediaComparators {
 
     // Comparator for sorting by finish date
     public static Comparator<MediaItem> byFinishDate() {
-        return Comparator.comparing(MediaItem::getFinishDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+        return Comparator.comparing(item -> LocalDate.parse(item.getFinishDate(), formatter));
     }
 
     // Comparator for sorting by order added, ID
