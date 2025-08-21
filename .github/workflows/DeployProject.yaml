@@ -57,6 +57,8 @@ jobs:
         id: restart_app
         run: |
           echo "Restarting application on EC2 instance..."
+          echo "${{ secrets.RSA_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }} << 'EOF'
             sudo systemctl stop javaapp
             sudo systemctl daemon-reexec
