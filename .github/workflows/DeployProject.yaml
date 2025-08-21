@@ -55,14 +55,20 @@ jobs:
     steps:
       - name: Restart Application on EC2
         id: restart_app
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://mariadb.cr2k00yesbe9.us-east-2.rds.amazonaws.com:5432/postgres?sslmode=require
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           echo "Restarting application on EC2 instance..."
           echo "${{ secrets.RSA_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }} << EOF
+            export SPRING_DATASOURCE_URL="$SPRING_DATASOURCE_URL"
+            export SPRING_DATASOURCE_USERNAME="$SPRING_DATASOURCE_USERNAME"
+            export SPRING_DATASOURCE_PASSWORD="$SPRING_DATASOURCE_PASSWORD"
             sudo systemctl stop javaapp
             sudo systemctl daemon-reexec
             sudo systemctl daemon-reload
             sudo systemctl start javaapp
           EOF
-          echo "Restart command executed."
