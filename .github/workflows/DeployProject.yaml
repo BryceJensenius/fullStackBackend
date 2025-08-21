@@ -70,14 +70,18 @@ jobs:
           chmod 600 key.pem
 
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }} << EOF
-            # Update environment file
+            # Ensure env directory exists
+            sudo mkdir -p /etc/javaapp
+
+            # Write environment file
             echo "SPRING_DATASOURCE_URL=jdbc:postgresql://mariadb.cr2k00yesbe9.us-east-2.rds.amazonaws.com:5432/postgres?sslmode=require" | sudo tee /etc/javaapp/javaapp.env > /dev/null
             echo "SPRING_DATASOURCE_USERNAME=postgres" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
+
             sudo chmod 600 /etc/javaapp/javaapp.env
             sudo chown root:root /etc/javaapp/javaapp.env
 
-            # Restart service and verify
+            # Restart service and check
             sudo systemctl daemon-reload
             sudo systemctl restart javaapp
             sleep 5
