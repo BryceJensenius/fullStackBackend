@@ -39,25 +39,33 @@ jobs:
       - name: Maven Clean and Package
         id: maven_build
         run: |
-          mvn clean package
+          mvn clean package # Package the application to get JAR file
           echo "Build completed successfully."
       - name: upload JAR to EC2
         id: upload_jar
         run: |
           echo "Uploading JAR to EC2 instance..."
           echo "${{ secrets.RSA_PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
+          chmod 600 key.pem # Create key file with Read/Write permissions for the owner
+
+          echo "Copying JAR file to EC2 instance..."
+          # StrictHostKeyChecking is set to no to avoid host key verification issues
           scp -o StrictHostKeyChecking=no -i key.pem target/*.jar ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/home/ec2-user/
           echo "JAR uploaded successfully."
 
           # Upload environment file with secrets
           echo "Creating environment file with database credentials..."
+          # Create Environment file which maps variable to values automatically
+          # these three variables are used in the application.properties file automatically
           cat <<EOF > javaapp.env
           SPRING_DATASOURCE_URL=jdbc:postgresql://mariadb.cr2k00yesbe9.us-east-2.rds.amazonaws.com:5432/postgres?sslmode=require
           SPRING_DATASOURCE_USERNAME=postgres
           SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
           EOF
 
+          echo "Environment file created successfully.""
+          echo "Uploading environment file to EC2 instance..."
+          # StrictHostKeyChecking is set to no to avoid host key verification issues
           scp -o StrictHostKeyChecking=no -i key.pem javaapp.env ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/tmp/javaapp.env
   restartProject:
     needs: [deploy-project, getEc2InstanceIp]
@@ -68,7 +76,7 @@ jobs:
           echo "Restarting application on EC2 instance..."
           echo "${{ secrets.RSA_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
-
+          # Everything between the EOF markers is executed on the remote EC2 instance
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }} << EOF
             # Ensure env directory exists
             sudo mkdir -p /etc/javaapp
@@ -78,12 +86,14 @@ jobs:
             echo "SPRING_DATASOURCE_USERNAME=postgres" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
 
-            sudo chmod 600 /etc/javaapp/javaapp.env
-            sudo chown root:root /etc/javaapp/javaapp.env
+            sudo chmod 600 /etc/javaapp/javaapp.env # Set permissions to read/write for the owner only
+            sudo chown root:root /etc/javaapp/javaapp.env # Ensure the file is owned by root so it can be read by the service
 
             # Restart service and check
             sudo systemctl daemon-reload
             sudo systemctl restart javaapp
             sleep 5
+            # Check if the service is active
+            # If the service fails to start, print the logs and exit with an error
             sudo systemctl is-active --quiet javaapp || (echo "Service failed to start!" && sudo journalctl -u javaapp --no-pager && exit 1)
           EOF
