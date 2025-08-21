@@ -63,7 +63,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
           EOF
 
-          echo "Environment file created successfully.""
+          echo "Environment file created successfully."
           echo "Uploading environment file to EC2 instance..."
           # StrictHostKeyChecking is set to no to avoid host key verification issues
           scp -o StrictHostKeyChecking=no -i key.pem javaapp.env ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/tmp/javaapp.env
