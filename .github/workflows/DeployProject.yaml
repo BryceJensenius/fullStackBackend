@@ -49,3 +49,18 @@ jobs:
           chmod 600 key.pem
           scp -o StrictHostKeyChecking=no -i key.pem target/*.jar ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/home/ec2-user/
           echo "JAR uploaded successfully."
+  restartProject:
+    needs: deploy-project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart Application on EC2
+        id: restart_app
+        run: |
+          echo "Restarting application on EC2 instance..."
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }} << 'EOF'
+            sudo systemctl stop javaapp
+            sudo systemctl daemon-reexec
+            sudo systemctl daemon-reload
+            sudo systemctl start javaapp
+          EOF
+          echo "Restart command executed."
