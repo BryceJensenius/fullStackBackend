@@ -47,5 +47,5 @@ jobs:
           echo "Uploading JAR to EC2 instance..."
           scp -i ${{ secrets.RSA_PRIVATE_KEY }} \
             target/*.jar \
-            ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/home/ec2-user/app.jar
+            ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/home/ec2-user/
           echo "JAR uploaded successfully."
