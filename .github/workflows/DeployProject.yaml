@@ -50,7 +50,7 @@ jobs:
           scp -o StrictHostKeyChecking=no -i key.pem target/*.jar ec2-user@${{ needs.getEc2InstanceIp.outputs.public_ip }}:/home/ec2-user/
           echo "JAR uploaded successfully."
   restartProject:
-    needs: deploy-project
+    needs: [deploy-project, getEc2InstanceIp]
     runs-on: ubuntu-latest
     steps:
       - name: Restart Application on EC2
