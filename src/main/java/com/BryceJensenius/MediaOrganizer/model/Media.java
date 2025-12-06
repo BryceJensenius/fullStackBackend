@@ -16,4 +16,6 @@ public interface Media {
     void setRating(double rating);
     String getReview();
     void setReview(String review);
+    User getUser();
+    void setUser(User user);
 }
