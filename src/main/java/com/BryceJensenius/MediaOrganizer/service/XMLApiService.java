@@ -1,14 +1,18 @@
 package com.BryceJensenius.MediaOrganizer.service;
 
-import com.BryceJensenius.MediaOrganizer.model.BoardGame;
-import org.springframework.stereotype.Service;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import org.w3c.dom.*;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import com.BryceJensenius.MediaOrganizer.model.BoardGame;
 
 @Service
 public class XMLApiService {

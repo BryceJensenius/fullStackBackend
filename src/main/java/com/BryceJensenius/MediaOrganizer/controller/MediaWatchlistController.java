@@ -2,8 +2,6 @@ package com.BryceJensenius.MediaOrganizer.controller;
 
 import java.util.List;
 
-import javax.print.attribute.standard.Media;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;

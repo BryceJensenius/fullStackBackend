@@ -1,12 +1,13 @@
 package com.BryceJensenius.MediaOrganizer.service;
 
-import com.BryceJensenius.MediaOrganizer.model.MediaItem;
-import com.BryceJensenius.MediaOrganizer.repository.MediaRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.BryceJensenius.MediaOrganizer.model.MediaItem;
+import com.BryceJensenius.MediaOrganizer.repository.MediaRepository;
 
 @Service
 public class MediaServiceImplementation implements MediaService {

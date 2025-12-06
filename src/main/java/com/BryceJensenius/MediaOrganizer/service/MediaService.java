@@ -1,9 +1,9 @@
 package com.BryceJensenius.MediaOrganizer.service;
 
-import com.BryceJensenius.MediaOrganizer.model.MediaItem;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.BryceJensenius.MediaOrganizer.model.MediaItem;
 
 public interface MediaService {
     public MediaItem saveMedia(MediaItem media);
