@@ -27,8 +27,7 @@ public class MediaWatchlistService {
     }
 
     public List<MediaWatchItem> getAllMedia(User user) {
-        List<MediaWatchItem> allItems = user.getMediaWatchList();
-        return allItems;
+        return user.getMediaWatchList();
     }
 
     public MediaWatchItem getMediaById(int id, User user) {
@@ -36,7 +35,7 @@ public class MediaWatchlistService {
         if(item == null || item.getUser() == null || item.getUser().getId() != user.getId()){
             return null;
         }
-        return mediaWatchlistRepository.findById(id);
+        return mediaWatchlistRepository.findById(id); // Only return if the media watch item belongs to the user
     }
 
     public boolean delete(int id, User user){
@@ -44,7 +43,7 @@ public class MediaWatchlistService {
         if(item == null || item.getUser() == null || item.getUser().getId() != user.getId()){
             return false;
         }
-        mediaWatchlistRepository.deleteById(id);
+        mediaWatchlistRepository.deleteById(id); // Only delete if the media watch item belongs to the user
         return true;
     }
 }

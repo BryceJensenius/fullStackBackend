@@ -30,7 +30,7 @@ public class User {
     private List<MediaWatchItem> mediaWatchList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<Media> mediaList;
+    private List<MediaItem> mediaList;
 
     public User() {}
 
@@ -45,7 +45,7 @@ public class User {
         this.token = token;
     }
 
-    public User(String username, String encPassword, Token token, List<Media> mediaList, List<MediaWatchItem> mediaWatchList){
+    public User(String username, String encPassword, Token token, List<MediaItem> mediaList, List<MediaWatchItem> mediaWatchList){
         this.username = username;
         this.encPassword = encPassword;
         this.token = token;
@@ -61,7 +61,7 @@ public class User {
         this.mediaWatchList.add(item);
     }
 
-    public void addMedia(Media media){
+    public void addMedia(MediaItem media){
         if(this.mediaList == null){
             this.mediaList = new ArrayList<>();
         }
@@ -101,11 +101,11 @@ public class User {
         this.mediaWatchList = mediaWatchList;
     }
 
-    public List<Media> getMediaList(){
+    public List<MediaItem> getMediaList(){
         return mediaList;
     }
 
-    public void setMediaList(List<Media> mediaList){
+    public void setMediaList(List<MediaItem> mediaList){
         this.mediaList = mediaList;
     }
 
