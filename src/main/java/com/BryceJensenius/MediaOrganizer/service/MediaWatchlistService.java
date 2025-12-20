@@ -28,8 +28,7 @@ public class MediaWatchlistService {
     }
 
     public List<MediaWatchItem> getAllMedia(User user) {
-        // Return a copy to ensure the list is fully loaded and detached from Hibernate session
-        return new ArrayList<>(user.getMediaWatchList());
+        return mediaWatchlistRepository.findByUserId(user.getId());
     }
 
     public MediaWatchItem getMediaById(int id, User user) {

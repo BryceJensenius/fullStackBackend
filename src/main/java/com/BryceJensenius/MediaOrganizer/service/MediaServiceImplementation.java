@@ -32,7 +32,7 @@ public class MediaServiceImplementation implements MediaService {
     @Override
     public List<MediaItem> getAllMedia(User user, FilterRequest filterRequest) {
         // Create a copy of the list to avoid modifying the user's actual media list
-        List<MediaItem> mediaList = new ArrayList<>(user.getMediaList());
+        List<MediaItem> mediaList = mediaRepository.findByUserId(user.getId());
         mediaList.removeIf(m -> {
             boolean ratingCheck = false;
             if(!filterRequest.getRatingFilter().isEmpty()){ // there is a rating so filter the rating
