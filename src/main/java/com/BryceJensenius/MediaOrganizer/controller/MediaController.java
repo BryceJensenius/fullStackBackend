@@ -79,11 +79,7 @@ public class MediaController {
             return null;
         }
         
-        FilterRequest filterRequest = new FilterRequest();
-        filterRequest.setNameFilter(nameFilter);
-        filterRequest.setRatingFilter(ratingFilter);
-        filterRequest.setSortType(sortType);
-        filterRequest.setSortOrder(sortOrder);
+        FilterRequest filterRequest = new FilterRequest(nameFilter, ratingFilter, sortType, sortOrder);
         
         List<MediaItem> mediaList = mediaService.getAllMedia(user, filterRequest); // get media list from database
 
