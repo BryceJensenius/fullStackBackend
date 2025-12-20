@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.BryceJensenius.MediaOrganizer.model.FilterRequest;
 import com.BryceJensenius.MediaOrganizer.model.MediaItem;
 import com.BryceJensenius.MediaOrganizer.model.User;
 import com.BryceJensenius.MediaOrganizer.repository.MediaRepository;
@@ -28,8 +29,24 @@ public class MediaServiceImplementation implements MediaService {
     }
 
     @Override
-    public List<MediaItem> getAllMedia(User user) {
-        return user.getMediaList();
+    public List<MediaItem> getAllMedia(User user, FilterRequest filterRequest) {
+        List<MediaItem> mediaList = user.getMediaList();
+        mediaList.removeIf(m -> {
+            boolean ratingCheck = false;
+            if(!filterRequest.getRatingFilter().isEmpty()){ // there is a rating so filter the rating
+                if(filterRequest.getRatingFilter().length() == 1){ // whole number so take anything thats rounds to this
+                    ratingCheck = !((int)m.getRating() == Integer.parseInt(filterRequest.getRatingFilter()));
+                }else{//double so take exact value
+                    ratingCheck = !(m.getRating() == Double.parseDouble(filterRequest.getRatingFilter()));
+                }
+            }
+
+            //always check name filter, if it is empty it will be true anyways
+            return ratingCheck || !m.getName().toLowerCase().contains(filterRequest.getNameFilter().toLowerCase());
+        });
+
+        filterRequest.sort(mediaList);//sort based on order and type specifications in the filter
+        return mediaList;
     }
 
     @Override

@@ -73,22 +73,7 @@ public class MediaController {
             return null;
         }
         FilterRequest finalFilterRequest = (filterRequest == null) ? new FilterRequest() : filterRequest;
-        List<MediaItem> mediaList = mediaService.getAllMedia(user); //get media list from database
-        mediaList.removeIf(m -> {
-            boolean ratingCheck = false;
-            if(!finalFilterRequest.getRatingFilter().isEmpty()){ // there is a rating so filter the rating
-                if(finalFilterRequest.getRatingFilter().length() == 1){ // whole number so take anything thats rounds to this
-                    ratingCheck = !((int)m.getRating() == Integer.parseInt(finalFilterRequest.getRatingFilter()));
-                }else{//double so take exact value
-                    ratingCheck = !(m.getRating() == Double.parseDouble(finalFilterRequest.getRatingFilter()));
-                }
-            }
-
-            //always check name filter, if it is empty it will be true anyways
-            return ratingCheck || !m.getName().toLowerCase().contains(finalFilterRequest.getNameFilter().toLowerCase());
-        });
-
-        finalFilterRequest.sort(mediaList);//sort based on order and type specifications in the filter
+        List<MediaItem> mediaList = mediaService.getAllMedia(user, finalFilterRequest); // get media list from database
 
         return mediaList;
     }
