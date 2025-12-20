@@ -90,6 +90,8 @@ jobs:
             echo "SPRING_DATASOURCE_URL=jdbc:postgresql://mariadb.cr2k00yesbe9.us-east-2.rds.amazonaws.com:5432/postgres?sslmode=require" | sudo tee /etc/javaapp/javaapp.env > /dev/null
             echo "SPRING_DATASOURCE_USERNAME=postgres" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
+            echo "BGG_BEARER_TOKEN=${{ secrets.BGG_BEARER_TOKEN }}" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
+            echo "OMDB_API_KEY=${{ secrets.OMDB_API_KEY }}" | sudo tee -a /etc/javaapp/javaapp.env > /dev/null
 
             sudo chmod 600 /etc/javaapp/javaapp.env # Set permissions to read/write for the owner only
             sudo chown root:root /etc/javaapp/javaapp.env # Ensure the file is owned by root so it can be read by the service
