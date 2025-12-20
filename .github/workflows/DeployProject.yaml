@@ -64,6 +64,8 @@ jobs:
           SPRING_DATASOURCE_URL=jdbc:postgresql://mariadb.cr2k00yesbe9.us-east-2.rds.amazonaws.com:5432/postgres?sslmode=require
           SPRING_DATASOURCE_USERNAME=postgres
           SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
+          BGG_BEARER_TOKEN=${{ secrets.BGG_BEARER_TOKEN }}
+          OMDB_API_KEY=${{ secrets.OMDB_API_KEY }}
           EOF
 
           echo "Environment file created successfully."
