@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,6 +17,12 @@ import com.BryceJensenius.MediaOrganizer.model.BoardGame;
 
 @Service
 public class XMLApiService {
+
+    private final String bggBearerToken;
+
+    public XMLApiService(@Value("${BGG_BEARER_TOKEN}") String token) { // Load token from Environment variable
+        bggBearerToken = token;
+    }
     /*
      * Given a Name of board game, returns the objectId as a String
      * Returns null if no exact match is found
@@ -49,6 +56,7 @@ public class XMLApiService {
             String apiUrl = "https://boardgamegeek.com/xmlapi/boardgame/" + objectId;
             HttpURLConnection conn = (HttpURLConnection) new URL(apiUrl).openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + bggBearerToken);
 
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(conn.getInputStream());
             doc.getDocumentElement().normalize();

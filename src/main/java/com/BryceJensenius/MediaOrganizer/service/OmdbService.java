@@ -2,6 +2,7 @@ package com.BryceJensenius.MediaOrganizer.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,8 +14,13 @@ import com.google.gson.JsonParser;
 @Service
 public class OmdbService {
 
-    private final String API_KEY = "d8879d";
-    private final String OMDB_URL = "http://www.omdbapi.com/?apikey=" + API_KEY + "&";
+    private final String API_KEY;
+    private final String OMDB_URL;
+
+    public OmdbService(@Value("${OMDB_API_KEY}") String apiKey) {
+        API_KEY = apiKey;
+        OMDB_URL = "http://www.omdbapi.com/?apikey=" + API_KEY + "&";
+    }
 
     /*
         Guess a Movie's Title from partially complete title
