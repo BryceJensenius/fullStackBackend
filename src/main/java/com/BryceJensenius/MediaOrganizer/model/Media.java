@@ -1,10 +1,5 @@
 package com.BryceJensenius.MediaOrganizer.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 public interface Media {
     int getId();
     void setId(int id);
@@ -16,4 +11,6 @@ public interface Media {
     void setRating(double rating);
     String getReview();
     void setReview(String review);
+    User getUser();
+    void setUser(User user);
 }

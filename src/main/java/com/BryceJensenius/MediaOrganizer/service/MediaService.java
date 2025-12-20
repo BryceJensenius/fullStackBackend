@@ -1,13 +1,14 @@
 package com.BryceJensenius.MediaOrganizer.service;
 
-import com.BryceJensenius.MediaOrganizer.model.MediaItem;
-
 import java.util.List;
-import java.util.Optional;
+
+import com.BryceJensenius.MediaOrganizer.model.FilterRequest;
+import com.BryceJensenius.MediaOrganizer.model.MediaItem;
+import com.BryceJensenius.MediaOrganizer.model.User;
 
 public interface MediaService {
-    public MediaItem saveMedia(MediaItem media);
-    public List<MediaItem> getAllMedia();
-    public Optional<MediaItem> getMediaById(int id);
-    public void deleteById(int id);
+    public MediaItem saveMedia(MediaItem media, User user);
+    public List<MediaItem> getAllMedia(User user, FilterRequest filterRequest);
+    public MediaItem getMediaById(int id, User user);
+    public void deleteById(int id, User user);
 }

@@ -13,6 +13,10 @@ public class MediaItem implements Media{
     @Column(length = 5000)
     private String review;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public int getId() {
         return id;
     }
@@ -55,6 +59,15 @@ public class MediaItem implements Media{
         }
         this.review = review;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public MediaItem() {
     }
 }

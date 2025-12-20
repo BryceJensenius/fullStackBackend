@@ -1,8 +1,9 @@
 package com.BryceJensenius.MediaOrganizer.service;
 
-import com.BryceJensenius.MediaOrganizer.model.BoardGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.BryceJensenius.MediaOrganizer.model.BoardGame;
 
 @Service
 public class BoardGameService {

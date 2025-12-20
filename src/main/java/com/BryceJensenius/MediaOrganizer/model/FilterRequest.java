@@ -9,8 +9,16 @@ import com.BryceJensenius.MediaOrganizer.comparators.MediaComparators;
 public class FilterRequest {
     private String nameFilter = "";
     private String ratingFilter = "";
-    private String sortType = "name";
+    private String sortType = "rating";
     private String sortOrder = "desc";
+
+    public FilterRequest(String nameFilter, String ratingFilter, String sortType, String sortOrder) {
+        this.nameFilter = nameFilter;
+        this.ratingFilter = ratingFilter;
+        this.sortType = sortType;
+        this.sortOrder = sortOrder;
+
+    }
 
     public String getNameFilter() {
         return nameFilter;
