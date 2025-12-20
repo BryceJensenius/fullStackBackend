@@ -28,7 +28,7 @@ public class MediaWatchlistService {
     }
 
     public List<MediaWatchItem> getAllMedia(User user) {
-        return mediaWatchlistRepository.findByUserId(user.getId());
+        return user.getMediaWatchList();
     }
 
     public MediaWatchItem getMediaById(int id, User user) {

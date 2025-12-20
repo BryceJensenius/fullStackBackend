@@ -1,5 +1,7 @@
 package com.BryceJensenius.MediaOrganizer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +15,8 @@ public class MediaItem implements Media{
     @Column(length = 5000)
     private String review;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
