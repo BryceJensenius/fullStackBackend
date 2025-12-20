@@ -13,7 +13,7 @@ public class MediaItem implements Media{
     @Column(length = 5000)
     private String review;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

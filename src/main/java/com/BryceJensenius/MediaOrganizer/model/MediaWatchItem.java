@@ -16,7 +16,7 @@ public class MediaWatchItem {
 
     private String mediaName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
