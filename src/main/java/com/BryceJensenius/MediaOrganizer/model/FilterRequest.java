@@ -9,7 +9,7 @@ import com.BryceJensenius.MediaOrganizer.comparators.MediaComparators;
 public class FilterRequest {
     private String nameFilter = "";
     private String ratingFilter = "";
-    private String sortType = "name";
+    private String sortType = "rating";
     private String sortOrder = "desc";
 
     public String getNameFilter() {

@@ -30,7 +30,7 @@ public class MediaController {
     @Autowired
     private UserService userService;
 
-    private FilterRequest filterRequest = new FilterRequest();
+    // private FilterRequest filterRequest = new FilterRequest();
 
     @PostMapping("/add")
     public String add(@RequestHeader("Authorization") String authHeader, @RequestBody MediaItem media){
@@ -52,13 +52,13 @@ public class MediaController {
         return "Media Item Was Deleted";
     }
 
-    @PostMapping("/setFilter")
-    public void setFilter(@RequestBody FilterRequest filterRequest) {
-        this.filterRequest = filterRequest; // Get the filter from the request object
-    }
+    // @PostMapping("/setFilter")
+    // public void setFilter(@RequestBody FilterRequest filterRequest) {
+    //     this.filterRequest = filterRequest; // Get the filter from the request object
+    // }
 
     @GetMapping("/getById/{id}")
-    public Optional<MediaItem> getMediaById(@RequestHeader("Authorization") String authHeader, @PathVariable int id){
+    public MediaItem getMediaById(@RequestHeader("Authorization") String authHeader, @PathVariable int id){
         User user = userService.getUserFromAuthorizationHeader(authHeader);
         if(user == null){
             return null;
@@ -67,27 +67,28 @@ public class MediaController {
     }
 
     @GetMapping("/getAll")
-    public List<MediaItem> getAllMedia(@RequestHeader("Authorization") String authHeader) {
+    public List<MediaItem> getAllMedia(@RequestBody(required = false) FilterRequest filterRequest, @RequestHeader("Authorization") String authHeader) {
         User user = userService.getUserFromAuthorizationHeader(authHeader);
         if(user == null){
             return null;
         }
-        List<MediaItem> mediaList = mediaService.getAllMedia(user);//get media list from database
+        FilterRequest finalFilterRequest = (filterRequest == null) ? new FilterRequest() : filterRequest;
+        List<MediaItem> mediaList = mediaService.getAllMedia(user); //get media list from database
         mediaList.removeIf(m -> {
             boolean ratingCheck = false;
-            if(!filterRequest.getRatingFilter().isEmpty()){//there is a rating so filter the rating
-                if(filterRequest.getRatingFilter().length() == 1){//whole number so take anything thats rounds to this
-                    ratingCheck = !((int)m.getRating() == Integer.parseInt(filterRequest.getRatingFilter()));
+            if(!finalFilterRequest.getRatingFilter().isEmpty()){ // there is a rating so filter the rating
+                if(finalFilterRequest.getRatingFilter().length() == 1){ // whole number so take anything thats rounds to this
+                    ratingCheck = !((int)m.getRating() == Integer.parseInt(finalFilterRequest.getRatingFilter()));
                 }else{//double so take exact value
-                    ratingCheck = !(m.getRating() == Double.parseDouble(filterRequest.getRatingFilter()));
+                    ratingCheck = !(m.getRating() == Double.parseDouble(finalFilterRequest.getRatingFilter()));
                 }
             }
 
             //always check name filter, if it is empty it will be true anyways
-            return ratingCheck || !m.getName().toLowerCase().contains(filterRequest.getNameFilter().toLowerCase());
+            return ratingCheck || !m.getName().toLowerCase().contains(finalFilterRequest.getNameFilter().toLowerCase());
         });
 
-        filterRequest.sort(mediaList);//sort based on order and type specifications in the filter
+        finalFilterRequest.sort(mediaList);//sort based on order and type specifications in the filter
 
         return mediaList;
     }
