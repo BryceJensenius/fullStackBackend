@@ -30,24 +30,31 @@ public class UserService {
 
     public String login(AuthorizationRequest authRequest){
         if(authRequest == null || authRequest.getUsername() == null || authRequest.getPassword() == null){
+            System.out.println("Auth request is null or missing fields");
             return null;
         }
+        System.out.println("Attempting login for user: " + authRequest.getUsername());
         String encPassword = encoder.encode(authRequest.getPassword());
         User user = userRepository.findByUsernameAndEncPassword(authRequest.getUsername(), encPassword);
         if(user == null){
+            System.out.println("No user found with provided credentials");
             return null;
         }
+        System.out.println("User found: " + user.getUsername());
         Token userToken = user.getToken();
         if(userToken == null){
+            System.out.println("No token found for user, generating new token");
             String tokenString = generateToken();
             Instant expiration = Instant.now().plus(Duration.ofDays(1)); // Token valid for 1 day
             userToken = new Token(tokenString, expiration);
             userToken.setUser(user);
             user.setToken(userToken);
+            System.out.println("Saving user and token");
             userRepository.save(user);
             tokenRepository.save(userToken);
         }
         if(userToken.getExpirationDate().isBefore(Instant.now())){
+            System.out.println("Token expired, generating new token");
             String tokenString = generateToken();
             Instant expiration = Instant.now().plus(Duration.ofDays(1)); // Token valid for 1 day
             userToken.setTokenValue(tokenString);
@@ -55,6 +62,7 @@ public class UserService {
             userRepository.save(user);
             tokenRepository.save(userToken);
         }
+        System.out.println("Login successful, returning token");
         return userToken.getTokenValue();
     }
 
