@@ -23,7 +23,9 @@ public class WebConfig {
                         .allowedOrigins("https://www.brycejensenius.xyz")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .exposedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }
