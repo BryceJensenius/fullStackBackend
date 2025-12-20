@@ -1,5 +1,6 @@
 package com.BryceJensenius.MediaOrganizer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class MediaWatchlistService {
     }
 
     public List<MediaWatchItem> getAllMedia(User user) {
-        return user.getMediaWatchList();
+        // Return a copy to ensure the list is fully loaded and detached from Hibernate session
+        return new ArrayList<>(user.getMediaWatchList());
     }
 
     public MediaWatchItem getMediaById(int id, User user) {
