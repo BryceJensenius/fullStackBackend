@@ -34,10 +34,14 @@ public class UserService {
             return null;
         }
         System.out.println("Attempting login for user: " + authRequest.getUsername());
-        String encPassword = encoder.encode(authRequest.getPassword());
-        User user = userRepository.findByUsernameAndEncPassword(authRequest.getUsername(), encPassword);
+        User user = userRepository.findByUsername(authRequest.getUsername());
         if(user == null){
-            System.out.println("No user found with provided credentials");
+            System.out.println("No user found with username: " + authRequest.getUsername());
+            return null;
+        }
+        // Verify password using BCrypt matches
+        if(!encoder.matches(authRequest.getPassword(), user.getEncPassword())){
+            System.out.println("Invalid password for user: " + authRequest.getUsername());
             return null;
         }
         System.out.println("User found: " + user.getUsername());
@@ -70,11 +74,12 @@ public class UserService {
         if(authRequest == null || authRequest.getUsername() == null || authRequest.getPassword() == null){
             return null;
         }
-        String encPassword = encoder.encode(authRequest.getPassword());
-        User existingUser = userRepository.findByUsernameAndEncPassword(authRequest.getUsername(), encPassword);
+        // Check if username already exists
+        User existingUser = userRepository.findByUsername(authRequest.getUsername());
         if(existingUser != null){
             return null;
         }
+        String encPassword = encoder.encode(authRequest.getPassword());
         String tokenString = generateToken();
         Instant expiration = Instant.now().plus(Duration.ofDays(1)); // Token valid for 1 day
         Token userToken = new Token(tokenString, expiration);
