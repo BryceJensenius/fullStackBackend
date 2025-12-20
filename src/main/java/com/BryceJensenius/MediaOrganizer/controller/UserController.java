@@ -2,7 +2,7 @@ package com.BryceJensenius.MediaOrganizer.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,7 @@ public class UserController {
         Returns a session token which is valid for 24 hours
         Returns null if login fails
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public String login(@RequestBody AuthorizationRequest authRequest) {
         String sessionToken = userService.login(authRequest);
         return sessionToken;
@@ -34,7 +34,7 @@ public class UserController {
         Returns a session token which is valid for 24 hours
         Returns null if signup fails
      */
-    @GetMapping("/signup")
+    @PostMapping("/signup")
     public String signup(@RequestBody AuthorizationRequest authRequest) {
         String sessionToken = userService.signup(authRequest);
         return sessionToken;
