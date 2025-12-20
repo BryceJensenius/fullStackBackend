@@ -44,16 +44,16 @@ public class UserService {
             userToken = new Token(tokenString, expiration);
             userToken.setUser(user);
             user.setToken(userToken);
-            tokenRepository.save(userToken);
             userRepository.save(user);
+            tokenRepository.save(userToken);
         }
         if(userToken.getExpirationDate().isBefore(Instant.now())){
             String tokenString = generateToken();
             Instant expiration = Instant.now().plus(Duration.ofDays(1)); // Token valid for 1 day
             userToken.setTokenValue(tokenString);
             userToken.setExpirationDate(expiration);
-            tokenRepository.save(userToken);
             userRepository.save(user);
+            tokenRepository.save(userToken);
         }
         return userToken.getTokenValue();
     }
@@ -72,8 +72,8 @@ public class UserService {
         Token userToken = new Token(tokenString, expiration);
         User newUser = new User(authRequest.getUsername(), encPassword, userToken);
         userToken.setUser(newUser);
-        tokenRepository.save(userToken);
         userRepository.save(newUser);
+        tokenRepository.save(userToken);
         return userToken.getTokenValue();
     }
 
