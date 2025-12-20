@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.BryceJensenius.MediaOrganizer.model.FilterRequest;
@@ -67,13 +68,24 @@ public class MediaController {
     }
 
     @GetMapping("/getAll")
-    public List<MediaItem> getAllMedia(@RequestBody(required = false) FilterRequest filterRequest, @RequestHeader("Authorization") String authHeader) {
+    public List<MediaItem> getAllMedia(
+            @RequestParam(required = false, defaultValue = "") String nameFilter,
+            @RequestParam(required = false, defaultValue = "") String ratingFilter,
+            @RequestParam(required = false, defaultValue = "rating") String sortType,
+            @RequestParam(required = false, defaultValue = "desc") String sortOrder,
+            @RequestHeader("Authorization") String authHeader) {
         User user = userService.getUserFromAuthorizationHeader(authHeader);
         if(user == null){
             return null;
         }
-        FilterRequest finalFilterRequest = (filterRequest == null) ? new FilterRequest() : filterRequest;
-        List<MediaItem> mediaList = mediaService.getAllMedia(user, finalFilterRequest); // get media list from database
+        
+        FilterRequest filterRequest = new FilterRequest();
+        filterRequest.setNameFilter(nameFilter);
+        filterRequest.setRatingFilter(ratingFilter);
+        filterRequest.setSortType(sortType);
+        filterRequest.setSortOrder(sortOrder);
+        
+        List<MediaItem> mediaList = mediaService.getAllMedia(user, filterRequest); // get media list from database
 
         return mediaList;
     }

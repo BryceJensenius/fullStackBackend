@@ -24,7 +24,7 @@ public class UserController {
         Returns null if login fails
      */
     @GetMapping("/login")
-    public String getMovie(@RequestBody AuthorizationRequest authRequest) {
+    public String login(@RequestBody AuthorizationRequest authRequest) {
         String sessionToken = userService.login(authRequest);
         return sessionToken;
     }
