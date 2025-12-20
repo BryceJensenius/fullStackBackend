@@ -2,6 +2,8 @@ package com.BryceJensenius.MediaOrganizer.model;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,7 @@ public class Token {
     private Instant expirationDate;
 
     @OneToOne(mappedBy = "token")
+    @JsonIgnore
     // This allows doing token.getUser() to retrieve the associated User
     @JoinColumn(name = "user_id", referencedColumnName = "id") // Create column user_id in Token table, with value referencing User's id
     private User user;
