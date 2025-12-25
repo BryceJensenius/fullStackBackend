@@ -60,6 +60,12 @@ public class User {
             this.mediaWatchList = new ArrayList<>();
         }
         item.setUser(this);
+        for(MediaWatchItem m : this.mediaWatchList){ // Replace existing media watch item with same id
+            if(m.getId() == item.getId()){
+                this.mediaWatchList.remove(m);
+                break;
+            }
+        }
         this.mediaWatchList.add(item);
     }
 
@@ -68,6 +74,12 @@ public class User {
             this.mediaList = new ArrayList<>();
         }
         media.setUser(this);
+        for(MediaItem m : this.mediaList){ // Replace existing media item with same id
+            if(m.getId() == media.getId()){
+                this.mediaList.remove(m);
+                break;
+            }
+        }
         this.mediaList.add(media);
     }
 
