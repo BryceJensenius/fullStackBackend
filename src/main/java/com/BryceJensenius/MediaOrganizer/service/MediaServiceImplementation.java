@@ -24,7 +24,6 @@ public class MediaServiceImplementation implements MediaService {
     @Override
     public MediaItem saveMedia(MediaItem media, User user) {
         user.addMedia(media);
-        media = mediaRepository.save(media);
         userRepository.save(user);
         return media;
     }

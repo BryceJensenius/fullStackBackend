@@ -22,7 +22,6 @@ public class MediaWatchlistService {
 
     public MediaWatchItem add(MediaWatchItem item, User user) {
         user.addMediaWatchItem(item);
-        item = mediaWatchlistRepository.save(item);
         userRepository.save(user);
         return item;
     }
