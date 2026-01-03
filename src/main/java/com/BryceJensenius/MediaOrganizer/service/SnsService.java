@@ -2,6 +2,8 @@ package com.BryceJensenius.MediaOrganizer.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.BryceJensenius.MediaOrganizer.model.SnsBody;
+
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
@@ -16,12 +18,11 @@ public class SnsService {
         TOPIC_ARN = topicArn;
     }
 
-
-    public void publishSnsMessage() {
+    public void publishSnsMessage(SnsBody snsBody) {
         SnsClient sns = SnsClient.builder().region(Region.US_EAST_2).build();
         sns.publish(PublishRequest.builder()
-                .message("This is a test message from Media Organizer")
-                .subject("Media Organizer Notification")
+                .message(snsBody.getMessage())
+                .subject(snsBody.getSubject())
                 .topicArn(TOPIC_ARN)
                 .build());
 
