@@ -61,7 +61,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          cat <<EOF > javaapp.env
+          cat <<'EOF' > javaapp.env
           SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/postgres
           SPRING_DATASOURCE_USERNAME=postgres
           SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
