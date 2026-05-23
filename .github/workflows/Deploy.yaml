@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'src/**'
+      - '.github/workflows/Deploy.yaml'
       - 'pom.xml'
   workflow_dispatch:
 
