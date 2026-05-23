@@ -119,7 +119,7 @@ jobs:
           cd /home/vm-user/media_organizer
 
           # Checkout repository
-          git checkout m
+          git checkout "$DEPLOY_BRANCH"
           git reset --hard
           git pull origin "$DEPLOY_BRANCH"
 
