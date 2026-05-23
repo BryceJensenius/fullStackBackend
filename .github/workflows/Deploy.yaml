@@ -15,6 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  DEPLOY_BRANCH: ${{ github.ref_name }}
   DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
   DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
   DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
@@ -113,6 +114,16 @@ jobs:
               printf '%s\n' "$DEPLOY_SUDO_PASSWORD" | sudo -S -p '' "$@"
             fi
           }
+
+          # Change to Repository directory
+          cd /home/vm-user/media_organizer
+
+          # Checkout repository
+          git checkout m
+          git reset --hard
+          git pull origin "$DEPLOY_BRANCH"
+
+          # Copy systemctl configuration file
           run_sudo cp config/media_organizer.service /etc/systemd/system/media_organizer.service
           run_sudo mkdir -p /etc/javaapp
           run_sudo install -m 600 -o root -g root /tmp/javaapp.env /etc/javaapp/javaapp.env
