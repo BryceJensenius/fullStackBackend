@@ -86,7 +86,7 @@ jobs:
           DEPLOY_SUDO_PASSWORD_B64="$(printf '%s' "$DEPLOY_SUDO_PASSWORD" | base64 -w0)"
 
           ssh -A -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
-            "DEPLOY_SUDO_PASSWORD_B64='$DEPLOY_SUDO_PASSWORD_B64' bash -se" <<'EOF'
+            "DEPLOY_BRANCH='$DEPLOY_BRANCH' DEPLOY_SUDO_PASSWORD_B64='$DEPLOY_SUDO_PASSWORD_B64' bash -se" <<'EOF'
           set -euo pipefail
 
           echo "Installing environment file and restarting javaapp..."
