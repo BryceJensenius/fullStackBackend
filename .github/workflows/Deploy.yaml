@@ -1,0 +1,125 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+env:
+  DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+  DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+  DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+  DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+  DEPLOY_SUDO_PASSWORD: ${{ secrets.DEPLOY_SUDO_PASSWORD }}
+
+jobs:
+  deploy:
+    name: Deploy to VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build application
+        shell: bash
+        run: |
+          set -euo pipefail
+          mvn clean package
+
+      - name: Configure SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/deploy_key
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+      - name: Prepare deployment files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat <<EOF > javaapp.env
+          SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/media_organizer
+          SPRING_DATASOURCE_USERNAME=postgres
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
+          BGG_BEARER_TOKEN=${{ secrets.BGG_BEARER_TOKEN }}
+          OMDB_API_KEY=${{ secrets.OMDB_API_KEY }}
+          SNS_TOPIC_ARN=${{ secrets.SNS_TOPIC_ARN }}
+          EOF
+
+      - name: Upload deployment files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          scp -i ~/.ssh/deploy_key target/*.jar "$DEPLOY_USER@$DEPLOY_HOST:/home/$DEPLOY_USER/"
+          scp -i ~/.ssh/deploy_key javaapp.env "$DEPLOY_USER@$DEPLOY_HOST:/tmp/javaapp.env"
+
+      - name: Restart application
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DEPLOY_SUDO_PASSWORD_B64="$(printf '%s' "$DEPLOY_SUDO_PASSWORD" | base64 -w0)"
+
+          ssh -A -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
+            "DEPLOY_SUDO_PASSWORD_B64='$DEPLOY_SUDO_PASSWORD_B64' bash -se" <<'EOF'
+          set -euo pipefail
+
+          echo "Installing environment file and restarting javaapp..."
+
+          DEPLOY_SUDO_PASSWORD=""
+          if [ -n "${DEPLOY_SUDO_PASSWORD_B64:-}" ]; then
+            DEPLOY_SUDO_PASSWORD="$(printf '%s' "$DEPLOY_SUDO_PASSWORD_B64" | base64 -d)"
+          fi
+
+          SUDO_MODE=""
+          if sudo -n true 2>/dev/null; then
+            SUDO_MODE="nopasswd"
+          elif [ -n "$DEPLOY_SUDO_PASSWORD" ] && printf '%s\n' "$DEPLOY_SUDO_PASSWORD" | sudo -S -p '' -v >/dev/null 2>&1; then
+            SUDO_MODE="password"
+          else
+            echo "Deployment requires either passwordless sudo or the DEPLOY_SUDO_PASSWORD GitHub secret."
+            echo "Grant NOPASSWD access for the deploy user or add the sudo password as a repository secret before rerunning this workflow."
+            exit 1
+          fi
+
+          run_sudo() {
+            if [ "$SUDO_MODE" = "nopasswd" ]; then
+              sudo -n "$@"
+            else
+              printf '%s\n' "$DEPLOY_SUDO_PASSWORD" | sudo -S -p '' "$@"
+            fi
+          }
+          run_sudo cp config/media_organizer.service /etc/systemd/system/media_organizer.service
+          run_sudo mkdir -p /etc/javaapp
+          run_sudo install -m 600 -o root -g root /tmp/javaapp.env /etc/javaapp/javaapp.env
+          rm -f /tmp/javaapp.env
+
+          run_sudo systemctl daemon-reload
+          run_sudo systemctl restart media_organizer
+          run_sudo systemctl is-active --quiet media_organizer || (echo "Service failed to start!" && run_sudo journalctl -u media_organizer --no-pager && exit 1)
+
+          echo "Deployment complete!"
+          EOF
