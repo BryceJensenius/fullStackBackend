@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=vm-user
 WorkingDirectory=/home/vm-user/
-ExecStart=/usr/bin/java -Djava.net.preferIPv6Addresses=true -jar /home/vm-user/MediaOrganizer-0.0.1-SNAPSHOT.jar
+ExecStart=/usr/bin/java -Djava.net.preferIPv4Stack=true -jar /home/vm-user/MediaOrganizer-0.0.1-SNAPSHOT.jar
 EnvironmentFile=/etc/javaapp/javaapp.env
 SuccessExitStatus=143
 Restart=on-failure
