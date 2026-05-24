@@ -22,6 +22,8 @@ public class WebConfig {
                 registry.addMapping("/**")
                     .allowedOrigins(
                         "https://www.brycejensenius.xyz",
+                        "https://mo.tradelens.space",
+                        "https://tradelens.space",
                         "http://localhost:3000",
                         "http://127.0.0.1:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
